@@ -1,4 +1,4 @@
-﻿using MotoFacil_API.Models;
+﻿using MotoFacilAPI.Models;
 
 namespace MotoFacilAPI.Models
 {

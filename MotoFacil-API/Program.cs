@@ -1,7 +1,7 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using MotoFacil_API.Data;
 using MotoFacilAPI.Data;
+using MotoFacilAPI.Dtos;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,7 +14,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
     {
-        policy.AllowAnyOrigin()   // permite qualquer dom?nio (pode restringir depois)
+        policy.AllowAnyOrigin()   // permite qualquer dom�nio (pode restringir depois)
               .AllowAnyMethod()   // permite GET, POST, PUT, DELETE
               .AllowAnyHeader();  // permite headers customizados
     });
@@ -27,9 +27,9 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo
     {
-        Title = "MotoF?cil API",
+        Title = "MotoF�cil API",
         Version = "v1",
-        Description = "API para gerenciamento de usu?rios e motos no sistema MotoF?cil"
+        Description = "API para gerenciamento de usu�rios e motos no sistema MotoF�cil"
     });
 });
 
@@ -39,7 +39,7 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "MotoF?cil API v1");
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "MotoF�cil API v1");
     c.RoutePrefix = "swagger";
 });
 

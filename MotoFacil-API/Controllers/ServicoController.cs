@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MotoFacil_API.Data;
 using MotoFacilAPI.Data;
 using MotoFacilAPI.Dtos;
 using MotoFacilAPI.Models;
