@@ -1,36 +1,51 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
+using MotoFacil_API.Data;
+using MotoFacilAPI.Data;
 
-namespace MotoFacil_API
+var builder = WebApplication.CreateBuilder(args);
+
+// Configura DbContext para Oracle
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseOracle(builder.Configuration.GetConnectionString("Oracle")));
+
+// Habilita CORS
+builder.Services.AddCors(options =>
 {
-    public class Program
+    options.AddPolicy("AllowAll", policy =>
     {
-        public static void Main(string[] args)
-        {
-            var builder = WebApplication.CreateBuilder(args);
+        policy.AllowAnyOrigin()   // permite qualquer dom?nio (pode restringir depois)
+              .AllowAnyMethod()   // permite GET, POST, PUT, DELETE
+              .AllowAnyHeader();  // permite headers customizados
+    });
+});
 
-            // Add services to the container.
+builder.Services.AddControllers();
 
-            builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+// Configura Swagger
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "MotoF?cil API",
+        Version = "v1",
+        Description = "API para gerenciamento de usu?rios e motos no sistema MotoF?cil"
+    });
+});
 
-            var app = builder.Build();
+var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
+// Habilita Swagger
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "MotoF?cil API v1");
+    c.RoutePrefix = "swagger";
+});
 
-            app.UseHttpsRedirection();
+// Aplica CORS antes do MapControllers
+app.UseCors("AllowAll");
 
-            app.UseAuthorization();
-
-
-            app.MapControllers();
-
-            app.Run();
-        }
-    }
-}
+app.UseAuthorization();
+app.MapControllers();
+app.Run();

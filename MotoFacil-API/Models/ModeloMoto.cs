@@ -1,6 +1,9 @@
-﻿namespace MotoFacil_API.Models
+﻿namespace MotoFacilAPI.Models
 {
-    public class ModeloMoto
+    public enum ModeloMoto
     {
+        MottuSport,
+        MottuE,
+        MottuPop
     }
 }
