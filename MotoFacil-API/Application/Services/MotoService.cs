@@ -1,5 +1,4 @@
 ﻿using MotoFacil_API.Application.Dtos;
-using MotoFacil_API.Domain.Models;
 using MotoFacilAPI.Application.Dtos;
 using MotoFacilAPI.Application.Interfaces;
 using MotoFacilAPI.Domain.Entities;
