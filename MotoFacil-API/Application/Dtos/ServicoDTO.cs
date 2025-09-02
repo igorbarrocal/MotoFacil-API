@@ -1,4 +1,4 @@
-﻿namespace MotoFacilAPI.Dtos
+﻿namespace MotoFacil_API.Application.Dtos
 {
     public class ServicoDto
     {

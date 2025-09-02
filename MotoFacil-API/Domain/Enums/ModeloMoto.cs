@@ -1,4 +1,4 @@
-﻿namespace MotoFacilAPI.Models
+﻿namespace MotoFacilAPI.Domain.Enums
 {
     public enum ModeloMoto
     {

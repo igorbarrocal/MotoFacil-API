@@ -1,51 +1,71 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using MotoFacilAPI.Data;
-using MotoFacilAPI.Dtos;
+using MotoFacilAPI.Infrastructure.Persistence;
+using MotoFacilAPI.Domain.Repositories;
+using MotoFacilAPI.Infrastructure.Repositories;
+using MotoFacilAPI.Application.Interfaces;
+using MotoFacilAPI.Application.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configura DbContext para Oracle
+// DbContext (Oracle) - expects connection string "Oracle" in appsettings
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseOracle(builder.Configuration.GetConnectionString("Oracle")));
 
-// Habilita CORS
+// Dependency Injection - Repositories
+builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+builder.Services.AddScoped<IMotoRepository, MotoRepository>();
+builder.Services.AddScoped<IServicoRepository, ServicoRepository>();
+
+// Dependency Injection - Services (Application)
+builder.Services.AddScoped<IUsuarioService, UsuarioService>();
+builder.Services.AddScoped<IMotoService, MotoService>();
+builder.Services.AddScoped<IServicoService, ServicoService>();
+
+// Controllers
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        // Serialize enums as strings (optional)
+        options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+    });
+
+// CORS (allow any for local dev; tighten in prod)
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
     {
-        policy.AllowAnyOrigin()   // permite qualquer dom�nio (pode restringir depois)
-              .AllowAnyMethod()   // permite GET, POST, PUT, DELETE
-              .AllowAnyHeader();  // permite headers customizados
+        policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
     });
 });
 
-builder.Services.AddControllers();
-
-// Configura Swagger
+// Swagger
+builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo
     {
-        Title = "MotoF�cil API",
+        Title = "MotoFacil API",
         Version = "v1",
-        Description = "API para gerenciamento de usu�rios e motos no sistema MotoF�cil"
+        Description = "API para gerenciamento de usuários, motos e serviços no sistema MotoFácil"
     });
 });
 
 var app = builder.Build();
 
-// Habilita Swagger
+// Middleware
+app.UseCors("AllowAll");
+app.UseHttpsRedirection();
+app.UseAuthorization();
+
+// Swagger UI
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "MotoF�cil API v1");
-    c.RoutePrefix = "swagger";
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "MotoFacil API v1");
+    c.RoutePrefix = string.Empty; // Swagger na raiz
 });
 
-// Aplica CORS antes do MapControllers
-app.UseCors("AllowAll");
-
-app.UseAuthorization();
 app.MapControllers();
+
 app.Run();
