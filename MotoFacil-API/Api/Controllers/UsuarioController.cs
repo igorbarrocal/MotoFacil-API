@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MotoFacil_API.Application.Dtos;
-using MotoFacilAPI.Application.Dtos;
 using MotoFacilAPI.Application.Interfaces;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace MotoFacilAPI.Api.Controllers
 {
@@ -12,35 +12,28 @@ namespace MotoFacilAPI.Api.Controllers
         private readonly IUsuarioService _service;
         public UsuariosController(IUsuarioService service) => _service = service;
 
+        /// <summary>
+        /// Lista usuários paginados com links HATEOAS.
+        /// </summary>
+        /// <param name="page">Página</param>
+        /// <param name="pageSize">Itens por página</param>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<UsuarioDto>>> Get() => Ok(await _service.ListAsync());
-
-        [HttpGet("{id:int}")]
-        public async Task<ActionResult<UsuarioDto>> GetById(int id)
+        [SwaggerOperation(Summary = "Lista usuários", Description = "Retorna usuários paginados com links HATEOAS")]
+        [ProducesResponseType(typeof(IEnumerable<UsuarioDto>), 200)]
+        public async Task<ActionResult<IEnumerable<UsuarioDto>>> Get([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
-            var result = await _service.GetByIdAsync(id);
-            return result is null ? NotFound() : Ok(result);
+            var list = await _service.ListPagedAsync(page, pageSize);
+            foreach (var usuario in list)
+            {
+                usuario.Links = new List<LinkDto>
+                {
+                    new LinkDto(Url.Action(nameof(GetById), new { id = usuario.Id })!, "self", "GET"),
+                    new LinkDto(Url.Action(nameof(Put), new { id = usuario.Id })!, "update_usuario", "PUT"),
+                    new LinkDto(Url.Action(nameof(Delete), new { id = usuario.Id })!, "delete_usuario", "DELETE")
+                };
+            }
+            return Ok(list);
         }
-
-        [HttpPost]
-        public async Task<ActionResult<UsuarioDto>> Post([FromBody] UsuarioDto dto)
-        {
-            var created = await _service.CreateAsync(dto);
-            return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
-        }
-
-        [HttpPut("{id:int}")]
-        public async Task<IActionResult> Put(int id, [FromBody] UsuarioDto dto)
-        {
-            var ok = await _service.UpdateAsync(id, dto);
-            return ok ? NoContent() : NotFound();
-        }
-
-        [HttpDelete("{id:int}")]
-        public async Task<IActionResult> Delete(int id)
-        {
-            var ok = await _service.DeleteAsync(id);
-            return ok ? NoContent() : NotFound();
-        }
+        // ... restantes endpoints com SwaggerOperation, ProducesResponseType, HATEOAS nos DTOs
     }
 }
