@@ -14,14 +14,28 @@ namespace MotoFacilAPI.Application.Services
         public async Task<List<ServicoDto>> ListAsync()
         {
             var list = await _repo.ListAsync();
-            return list.Select(s => new ServicoDto { Id = s.Id, Descricao = s.Descricao, Data = s.Data, UsuarioId = s.UsuarioId, MotoId = s.MotoId }).ToList();
+            return list.Select(s => new ServicoDto
+            {
+                Id = s.Id,
+                Descricao = s.Descricao,
+                Data = s.Data,
+                UsuarioId = s.UsuarioId,
+                MotoId = s.MotoId
+            }).ToList();
         }
 
         public async Task<ServicoDto?> GetByIdAsync(int id)
         {
             var s = await _repo.GetByIdAsync(id);
             if (s is null) return null;
-            return new ServicoDto { Id = s.Id, Descricao = s.Descricao, Data = s.Data, UsuarioId = s.UsuarioId, MotoId = s.MotoId };
+            return new ServicoDto
+            {
+                Id = s.Id,
+                Descricao = s.Descricao,
+                Data = s.Data,
+                UsuarioId = s.UsuarioId,
+                MotoId = s.MotoId
+            };
         }
 
         public async Task<ServicoDto> CreateAsync(ServicoDto dto)

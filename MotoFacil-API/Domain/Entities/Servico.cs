@@ -1,5 +1,8 @@
 ﻿namespace MotoFacilAPI.Domain.Entities
 {
+    /// <summary>
+    /// Entidade rica: Serviço realizado em uma moto
+    /// </summary>
     public class Servico
     {
         public int Id { get; private set; }
@@ -24,6 +27,9 @@
             MotoId = motoId;
         }
 
+        /// <summary>
+        /// Reagenda a data do serviço (regra de negócio: não pode ser passado distante)
+        /// </summary>
         public void Reagendar(DateTime novaData)
         {
             if (novaData < DateTime.UtcNow.AddDays(-1))
