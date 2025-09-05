@@ -9,22 +9,12 @@
         }
     },
     "profiles": {
-        "http": {
+        "MotoFacil-API": {
             "commandName": "Project",
             "dotnetRunMessages": true,
             "launchBrowser": true,
-            "launchUrl": "index.html",
-            "applicationUrl": "http://localhost:5160",
-            "environmentVariables": {
-                "ASPNETCORE_ENVIRONMENT": "Development"
-            }
-        },
-        "https": {
-            "commandName": "Project",
-            "dotnetRunMessages": true,
-            "launchBrowser": true,
-            "launchUrl": "index.html",
-            "applicationUrl": "http://localhost:5160",
+            "launchUrl": "swagger",
+            "applicationUrl": "http://localhost:5160;https://localhost:7160",
             "environmentVariables": {
                 "ASPNETCORE_ENVIRONMENT": "Development"
             }
@@ -32,7 +22,7 @@
         "IIS Express": {
             "commandName": "IISExpress",
             "launchBrowser": true,
-            "launchUrl": "index.html",
+            "launchUrl": "swagger",
             "environmentVariables": {
                 "ASPNETCORE_ENVIRONMENT": "Development"
             }

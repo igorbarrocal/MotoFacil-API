@@ -8,29 +8,28 @@ using MotoFacilAPI.Application.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// DbContext (Oracle) - expects connection string "Oracle" in appsettings
+// Conexão Oracle definida em appsettings.json
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseOracle(builder.Configuration.GetConnectionString("Oracle")));
 
-// Dependency Injection - Repositories
+// Injeção de dependência dos repositórios (Domain/Infra)
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<IMotoRepository, MotoRepository>();
 builder.Services.AddScoped<IServicoRepository, ServicoRepository>();
 
-// Dependency Injection - Services (Application)
+// Injeção de dependência dos serviços de aplicação (Application)
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<IMotoService, MotoService>();
 builder.Services.AddScoped<IServicoService, ServicoService>();
 
-// Controllers
+// Controllers + Enum como string no JSON
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
-        // Serialize enums as strings (optional)
         options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
     });
 
-// CORS (allow any for local dev; tighten in prod)
+// CORS liberado para dev
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
@@ -39,7 +38,7 @@ builder.Services.AddCors(options =>
     });
 });
 
-// Swagger
+// Configuração Swagger/OpenAPI
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -49,16 +48,17 @@ builder.Services.AddSwaggerGen(c =>
         Version = "v1",
         Description = "API para gerenciamento de usuários, motos e serviços no sistema MotoFácil"
     });
+    // Mostra exemplos e modelos (se anotados nos DTOs)
+    c.EnableAnnotations();
 });
 
+// Pipeline
 var app = builder.Build();
 
-// Middleware
 app.UseCors("AllowAll");
 app.UseHttpsRedirection();
 app.UseAuthorization();
 
-// Swagger UI
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
