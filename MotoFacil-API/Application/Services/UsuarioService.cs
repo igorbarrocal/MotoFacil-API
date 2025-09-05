@@ -1,5 +1,4 @@
-﻿using MotoFacil_API.Application.Dtos;
-using MotoFacilAPI.Application.Dtos;
+﻿using MotoFacilAPI.Application.Dtos;
 using MotoFacilAPI.Application.Interfaces;
 using MotoFacilAPI.Domain.Entities;
 using MotoFacilAPI.Domain.Repositories;
@@ -11,25 +10,12 @@ namespace MotoFacilAPI.Application.Services
     {
         private readonly IUsuarioRepository _repo;
 
-        public UsuarioService(IUsuarioRepository repo)
-        {
-            _repo = repo;
-        }
+        public UsuarioService(IUsuarioRepository repo) => _repo = repo;
 
         public async Task<List<UsuarioDto>> ListAsync()
         {
             var usuarios = await _repo.ListAsync();
             return usuarios.Select(ToDto).ToList();
-        }
-
-        public async Task<List<UsuarioDto>> ListPagedAsync(int page, int pageSize)
-        {
-            var usuarios = await _repo.ListAsync();
-            return usuarios
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .Select(ToDto)
-                .ToList();
         }
 
         public async Task<UsuarioDto?> GetByIdAsync(int id)
@@ -61,7 +47,6 @@ namespace MotoFacilAPI.Application.Services
             return true;
         }
 
-        // Clean Code: método privado para conversão e HATEOAS
         private UsuarioDto ToDto(Usuario usuario)
         {
             return new UsuarioDto

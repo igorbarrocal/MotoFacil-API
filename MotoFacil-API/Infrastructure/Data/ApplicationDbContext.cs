@@ -24,12 +24,6 @@ namespace MotoFacilAPI.Infrastructure.Persistence
                 });
                 b.Navigation(u => u.Motos).AutoInclude(false);
             });
-
-            // Configure string lengths if needed
-            modelBuilder.Entity<Servico>(b =>
-            {
-                b.Property(s => s.Descricao).HasMaxLength(255);
-            });
         }
     }
 }

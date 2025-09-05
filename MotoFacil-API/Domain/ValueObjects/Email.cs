@@ -6,7 +6,6 @@ namespace MotoFacilAPI.Domain.ValueObjects
     {
         public string Value { get; private set; }
 
-        // EF Core requires a parameterless constructor for owned types
         private Email() { Value = string.Empty; }
 
         public Email(string value)
@@ -14,7 +13,6 @@ namespace MotoFacilAPI.Domain.ValueObjects
             if (string.IsNullOrWhiteSpace(value))
                 throw new ArgumentException("Email não pode ser vazio.", nameof(value));
 
-            // Regex simples para validação básica
             var pattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
             if (!Regex.IsMatch(value, pattern, RegexOptions.IgnoreCase))
                 throw new ArgumentException("Email inválido.", nameof(value));
@@ -23,8 +21,6 @@ namespace MotoFacilAPI.Domain.ValueObjects
         }
 
         public override string ToString() => Value;
-
-        // Value object equality
         public override bool Equals(object? obj) => obj is Email other && Value.Equals(other.Value, StringComparison.OrdinalIgnoreCase);
         public override int GetHashCode() => StringComparer.OrdinalIgnoreCase.GetHashCode(Value);
     }
