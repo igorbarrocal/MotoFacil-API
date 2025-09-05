@@ -22,7 +22,6 @@ namespace MotoFacilAPI.Application.Services
             return usuarios.Select(ToDto).ToList();
         }
 
-        // Novo método para paginação
         public async Task<List<UsuarioDto>> ListPagedAsync(int page, int pageSize)
         {
             var usuarios = await _repo.ListAsync();
@@ -43,9 +42,7 @@ namespace MotoFacilAPI.Application.Services
         {
             var entity = new Usuario(dto.Nome, new Email(dto.Email));
             await _repo.AddAsync(entity);
-            dto.Id = entity.Id;
-            dto.Links = GetLinks(dto.Id);
-            return dto;
+            return ToDto(entity);
         }
 
         public async Task<bool> UpdateAsync(int id, UsuarioDto dto)
@@ -64,7 +61,7 @@ namespace MotoFacilAPI.Application.Services
             return true;
         }
 
-        // Métodos auxiliares para Clean Code e HATEOAS
+        // Clean Code: método privado para conversão e HATEOAS
         private UsuarioDto ToDto(Usuario usuario)
         {
             return new UsuarioDto
@@ -83,5 +80,10 @@ namespace MotoFacilAPI.Application.Services
                 new LinkDto($"/api/usuarios/{id}", "update_usuario", "PUT"),
                 new LinkDto($"/api/usuarios/{id}", "delete_usuario", "DELETE")
             };
+
+        Task<IEnumerable<object>> IUsuarioService.ListPagedAsync(int page, int pageSize)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

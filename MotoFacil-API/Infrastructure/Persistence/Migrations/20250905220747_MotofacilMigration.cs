@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace MotoFacil_API.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class MotofacilMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

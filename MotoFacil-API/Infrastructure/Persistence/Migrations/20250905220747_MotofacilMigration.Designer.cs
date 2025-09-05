@@ -12,8 +12,8 @@ using Oracle.EntityFrameworkCore.Metadata;
 namespace MotoFacil_API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250902121534_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20250905220747_MotofacilMigration")]
+    partial class MotofacilMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
