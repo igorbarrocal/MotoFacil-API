@@ -2,16 +2,20 @@
 
 namespace MotoFacilAPI.Domain.Entities
 {
+    /// <summary>
+    /// Entidade Moto (Agregado Raiz)
+    /// </summary>
     public class Moto
     {
         public int Id { get; private set; }
         public ModeloMoto Modelo { get; private set; }
-        public string Marca { get; private set; } = string.Empty;
-        public int UsuarioId { get; private set; }
-        public Usuario? Usuario { get; private set; }
+        public string Marca { get; private set; }
+        public int UsuarioId { get; private set; } // FK para dono da moto
+
+        // Navegação (opcional)
         public List<Servico> Servicos { get; private set; } = new();
 
-        private Moto() { }
+        private Moto() { } // EF
 
         public Moto(ModeloMoto modelo, string marca, int usuarioId)
         {
@@ -23,6 +27,9 @@ namespace MotoFacilAPI.Domain.Entities
             UsuarioId = usuarioId;
         }
 
+        /// <summary>
+        /// Atualiza a marca da moto
+        /// </summary>
         public void AtualizarMarca(string novaMarca)
         {
             if (string.IsNullOrWhiteSpace(novaMarca))
@@ -30,6 +37,12 @@ namespace MotoFacilAPI.Domain.Entities
             Marca = novaMarca.Trim();
         }
 
-        public void DefinirDono(int usuarioId) => UsuarioId = usuarioId;
+        /// <summary>
+        /// Atualiza o modelo da moto
+        /// </summary>
+        public void AtualizarModelo(ModeloMoto novoModelo)
+        {
+            Modelo = novoModelo;
+        }
     }
 }

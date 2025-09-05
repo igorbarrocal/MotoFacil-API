@@ -80,10 +80,5 @@ namespace MotoFacilAPI.Application.Services
                 new LinkDto($"/api/usuarios/{id}", "update_usuario", "PUT"),
                 new LinkDto($"/api/usuarios/{id}", "delete_usuario", "DELETE")
             };
-
-        Task<IEnumerable<object>> IUsuarioService.ListPagedAsync(int page, int pageSize)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

@@ -1,8 +1,6 @@
-﻿using MotoFacil_API.Application.Dtos;
-using MotoFacilAPI.Application.Dtos;
+﻿using MotoFacilAPI.Application.Dtos;
 using MotoFacilAPI.Application.Interfaces;
 using MotoFacilAPI.Domain.Entities;
-using MotoFacilAPI.Domain.Enums;
 using MotoFacilAPI.Domain.Repositories;
 
 namespace MotoFacilAPI.Application.Services
@@ -38,7 +36,7 @@ namespace MotoFacilAPI.Application.Services
             var m = await _repo.GetByIdAsync(id);
             if (m is null) return false;
             m.AtualizarMarca(dto.Marca);
-            // Modelo/UsuarioId update if needed
+            m.AtualizarModelo(dto.Modelo);
             await _repo.UpdateAsync(m);
             return true;
         }

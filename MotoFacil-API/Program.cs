@@ -1,13 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using System.Reflection;
 using MotoFacilAPI.Infrastructure.Persistence;
 using MotoFacilAPI.Domain.Repositories;
 using MotoFacilAPI.Infrastructure.Repositories;
 using MotoFacilAPI.Application.Interfaces;
 using MotoFacilAPI.Application.Services;
-using Swashbuckle.AspNetCore.Annotations;
-using Swashbuckle.AspNetCore.SwaggerGen; // Ensure this namespace is included
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,7 +26,7 @@ builder.Services.AddScoped<IServicoService, ServicoService>();
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
-        // Serialize enums as strings
+        // Serialize enums as strings (optional)
         options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
     });
 
@@ -42,7 +39,7 @@ builder.Services.AddCors(options =>
     });
 });
 
-// Swagger/OpenAPI
+// Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -52,15 +49,6 @@ builder.Services.AddSwaggerGen(c =>
         Version = "v1",
         Description = "API para gerenciamento de usuários, motos e serviços no sistema MotoFácil"
     });
-
-    // Adiciona exemplos automáticos e descrições dos modelos DTO (usando XML do projeto)
-    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFilename);
-    if (File.Exists(xmlPath))
-        c.IncludeXmlComments(xmlPath);
-
-    // Fix: Add the Swashbuckle.AspNetCore.Annotations package and ensure the namespace is included
-    c.EnableAnnotations(); // This method is part of Swashbuckle.AspNetCore.Annotations
 });
 
 var app = builder.Build();

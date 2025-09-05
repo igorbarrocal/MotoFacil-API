@@ -1,5 +1,4 @@
-﻿using MotoFacil_API.Application.Dtos;
-using MotoFacilAPI.Application.Dtos;
+﻿using MotoFacilAPI.Application.Dtos;
 
 namespace MotoFacilAPI.Application.Interfaces
 {
