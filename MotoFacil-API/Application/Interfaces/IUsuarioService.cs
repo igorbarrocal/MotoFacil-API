@@ -10,5 +10,6 @@ namespace MotoFacilAPI.Application.Interfaces
         Task<UsuarioDto> CreateAsync(UsuarioDto dto);
         Task<bool> UpdateAsync(int id, UsuarioDto dto);
         Task<bool> DeleteAsync(int id);
+        Task<IEnumerable<object>> ListPagedAsync(int page, int pageSize);
     }
 }
