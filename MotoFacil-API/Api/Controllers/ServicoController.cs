@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MotoFacil_API.Application.Dtos;
 using MotoFacilAPI.Application.Dtos;
 using MotoFacilAPI.Application.Interfaces;
-using Swashbuckle.AspNetCore.Annotations;
 
 namespace MotoFacilAPI.Api.Controllers
 {
@@ -13,36 +11,71 @@ namespace MotoFacilAPI.Api.Controllers
         private readonly IServicoService _service;
         public ServicosController(IServicoService service) => _service = service;
 
-        /// <summary>Lista todos os serviços</summary>
+        /// <summary>
+        /// Lista todos os serviços (com paginação)
+        /// </summary>
+        /// <param name="page">Página</param>
+        /// <param name="pageSize">Itens por página</param>
         [HttpGet]
-        [SwaggerOperation(Summary = "Lista todos os serviços")]
         [ProducesResponseType(typeof(IEnumerable<ServicoDto>), 200)]
-        public async Task<ActionResult<IEnumerable<ServicoDto>>> Get() => Ok(await _service.ListAsync());
+        public async Task<ActionResult<IEnumerable<ServicoDto>>> Get([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+        {
+            var all = await _service.ListAsync();
+            var paged = all.Skip((page - 1) * pageSize).Take(pageSize).ToList();
 
-        /// <summary>Busca serviço por ID</summary>
+            // HATEOAS
+            foreach (var servico in paged)
+            {
+                servico.Links = new List<LinkDto>
+                {
+                    new LinkDto($"/api/servicos/{servico.Id}", "self", "GET"),
+                    new LinkDto($"/api/servicos/{servico.Id}", "update_servico", "PUT"),
+                    new LinkDto($"/api/servicos/{servico.Id}", "delete_servico", "DELETE")
+                };
+            }
+            return Ok(paged);
+        }
+
+        /// <summary>
+        /// Busca serviço por ID
+        /// </summary>
         [HttpGet("{id:int}")]
-        [SwaggerOperation(Summary = "Busca serviço por ID")]
         [ProducesResponseType(typeof(ServicoDto), 200)]
         [ProducesResponseType(404)]
         public async Task<ActionResult<ServicoDto>> GetById(int id)
         {
             var result = await _service.GetByIdAsync(id);
-            return result is null ? NotFound() : Ok(result);
+            if (result is null) return NotFound();
+            result.Links = new List<LinkDto>
+            {
+                new LinkDto($"/api/servicos/{id}", "self", "GET"),
+                new LinkDto($"/api/servicos/{id}", "update_servico", "PUT"),
+                new LinkDto($"/api/servicos/{id}", "delete_servico", "DELETE")
+            };
+            return Ok(result);
         }
 
-        /// <summary>Cria novo serviço</summary>
+        /// <summary>
+        /// Cria novo serviço
+        /// </summary>
         [HttpPost]
-        [SwaggerOperation(Summary = "Cria novo serviço")]
         [ProducesResponseType(typeof(ServicoDto), 201)]
         public async Task<ActionResult<ServicoDto>> Post([FromBody] ServicoDto dto)
         {
             var created = await _service.CreateAsync(dto);
+            created.Links = new List<LinkDto>
+            {
+                new LinkDto($"/api/servicos/{created.Id}", "self", "GET"),
+                new LinkDto($"/api/servicos/{created.Id}", "update_servico", "PUT"),
+                new LinkDto($"/api/servicos/{created.Id}", "delete_servico", "DELETE")
+            };
             return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
         }
 
-        /// <summary>Atualiza serviço</summary>
+        /// <summary>
+        /// Atualiza serviço
+        /// </summary>
         [HttpPut("{id:int}")]
-        [SwaggerOperation(Summary = "Atualiza serviço")]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> Put(int id, [FromBody] ServicoDto dto)
@@ -51,9 +84,10 @@ namespace MotoFacilAPI.Api.Controllers
             return ok ? NoContent() : NotFound();
         }
 
-        /// <summary>Remove serviço</summary>
+        /// <summary>
+        /// Remove serviço
+        /// </summary>
         [HttpDelete("{id:int}")]
-        [SwaggerOperation(Summary = "Remove serviço")]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> Delete(int id)

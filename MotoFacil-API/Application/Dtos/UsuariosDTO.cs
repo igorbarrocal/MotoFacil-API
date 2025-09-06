@@ -12,7 +12,7 @@
         /// <example>igor@email.com</example>
         public string Email { get; set; } = string.Empty;
 
-        // HATEOAS (opcional)
+        // HATEOAS
         public List<LinkDto>? Links { get; set; }
     }
 
@@ -22,5 +22,6 @@
         public string Rel { get; set; } = string.Empty;
         public string Method { get; set; } = string.Empty;
         public LinkDto(string href, string rel, string method) { Href = href; Rel = rel; Method = method; }
+        public LinkDto() { }
     }
 }

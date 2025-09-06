@@ -12,12 +12,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseOracle(builder.Configuration.GetConnectionString("Oracle")));
 
-// Injeção de dependência dos repositórios (Domain/Infra)
+// Repositórios (Domain/Infra)
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<IMotoRepository, MotoRepository>();
 builder.Services.AddScoped<IServicoRepository, ServicoRepository>();
 
-// Injeção de dependência dos serviços de aplicação (Application)
+// Serviços de Aplicação (Application)
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<IMotoService, MotoService>();
 builder.Services.AddScoped<IServicoService, ServicoService>();
@@ -48,8 +48,7 @@ builder.Services.AddSwaggerGen(c =>
         Version = "v1",
         Description = "API para gerenciamento de usuários, motos e serviços no sistema MotoFácil"
     });
-    // Mostra exemplos e modelos (se anotados nos DTOs)
-    c.EnableAnnotations();
+    // NÃO usa EnableAnnotations aqui
 });
 
 // Pipeline
@@ -60,11 +59,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.UseSwagger();
-app.UseSwaggerUI(c =>
-{
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "MotoFacil API v1");
-    c.RoutePrefix = string.Empty; // Swagger na raiz
-});
+app.UseSwaggerUI(); // Usa configuração padrão: acessa por /swagger
 
 app.MapControllers();
 

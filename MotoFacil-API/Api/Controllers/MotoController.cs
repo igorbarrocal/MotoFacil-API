@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MotoFacilAPI.Application.Dtos;
 using MotoFacilAPI.Application.Interfaces;
-using Swashbuckle.AspNetCore.Annotations;
 
 namespace MotoFacilAPI.Api.Controllers
 {
@@ -13,36 +12,63 @@ namespace MotoFacilAPI.Api.Controllers
         public MotosController(IMotoService service) => _service = service;
 
         /// <summary>
-        /// Lista todas as motos
+        /// Lista todas as motos (com paginação)
         /// </summary>
+        /// <param name="page">Página</param>
+        /// <param name="pageSize">Itens por página</param>
         [HttpGet]
-        [SwaggerOperation(Summary = "Lista todas as motos")]
         [ProducesResponseType(typeof(IEnumerable<MotoDto>), 200)]
-        public async Task<ActionResult<IEnumerable<MotoDto>>> Get()
-            => Ok(await _service.ListAsync());
+        public async Task<ActionResult<IEnumerable<MotoDto>>> Get([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+        {
+            var all = await _service.ListAsync();
+            var paged = all.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+
+            // HATEOAS
+            foreach (var moto in paged)
+            {
+                moto.Links = new List<LinkDto>
+                {
+                    new LinkDto($"/api/motos/{moto.Id}", "self", "GET"),
+                    new LinkDto($"/api/motos/{moto.Id}", "update_moto", "PUT"),
+                    new LinkDto($"/api/motos/{moto.Id}", "delete_moto", "DELETE")
+                };
+            }
+            return Ok(paged);
+        }
 
         /// <summary>
         /// Busca moto por ID
         /// </summary>
         [HttpGet("{id:int}")]
-        [SwaggerOperation(Summary = "Busca moto por ID")]
         [ProducesResponseType(typeof(MotoDto), 200)]
         [ProducesResponseType(404)]
         public async Task<ActionResult<MotoDto>> GetById(int id)
         {
             var result = await _service.GetByIdAsync(id);
-            return result is null ? NotFound() : Ok(result);
+            if (result is null) return NotFound();
+            result.Links = new List<LinkDto>
+            {
+                new LinkDto($"/api/motos/{id}", "self", "GET"),
+                new LinkDto($"/api/motos/{id}", "update_moto", "PUT"),
+                new LinkDto($"/api/motos/{id}", "delete_moto", "DELETE")
+            };
+            return Ok(result);
         }
 
         /// <summary>
         /// Cria nova moto
         /// </summary>
         [HttpPost]
-        [SwaggerOperation(Summary = "Cria nova moto")]
         [ProducesResponseType(typeof(MotoDto), 201)]
         public async Task<ActionResult<MotoDto>> Post([FromBody] MotoDto dto)
         {
             var created = await _service.CreateAsync(dto);
+            created.Links = new List<LinkDto>
+            {
+                new LinkDto($"/api/motos/{created.Id}", "self", "GET"),
+                new LinkDto($"/api/motos/{created.Id}", "update_moto", "PUT"),
+                new LinkDto($"/api/motos/{created.Id}", "delete_moto", "DELETE")
+            };
             return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
         }
 
@@ -50,7 +76,6 @@ namespace MotoFacilAPI.Api.Controllers
         /// Atualiza uma moto
         /// </summary>
         [HttpPut("{id:int}")]
-        [SwaggerOperation(Summary = "Atualiza uma moto")]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> Put(int id, [FromBody] MotoDto dto)
@@ -63,7 +88,6 @@ namespace MotoFacilAPI.Api.Controllers
         /// Remove uma moto
         /// </summary>
         [HttpDelete("{id:int}")]
-        [SwaggerOperation(Summary = "Remove uma moto")]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> Delete(int id)
