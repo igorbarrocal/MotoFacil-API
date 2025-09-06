@@ -22,17 +22,6 @@ namespace MotoFacilAPI.Api.Controllers
         {
             var all = await _service.ListAsync();
             var paged = all.Skip((page - 1) * pageSize).Take(pageSize).ToList();
-
-            // HATEOAS
-            foreach (var moto in paged)
-            {
-                moto.Links = new List<LinkDto>
-                {
-                    new LinkDto($"/api/motos/{moto.Id}", "self", "GET"),
-                    new LinkDto($"/api/motos/{moto.Id}", "update_moto", "PUT"),
-                    new LinkDto($"/api/motos/{moto.Id}", "delete_moto", "DELETE")
-                };
-            }
             return Ok(paged);
         }
 
@@ -46,12 +35,6 @@ namespace MotoFacilAPI.Api.Controllers
         {
             var result = await _service.GetByIdAsync(id);
             if (result is null) return NotFound();
-            result.Links = new List<LinkDto>
-            {
-                new LinkDto($"/api/motos/{id}", "self", "GET"),
-                new LinkDto($"/api/motos/{id}", "update_moto", "PUT"),
-                new LinkDto($"/api/motos/{id}", "delete_moto", "DELETE")
-            };
             return Ok(result);
         }
 
@@ -63,12 +46,6 @@ namespace MotoFacilAPI.Api.Controllers
         public async Task<ActionResult<MotoDto>> Post([FromBody] MotoDto dto)
         {
             var created = await _service.CreateAsync(dto);
-            created.Links = new List<LinkDto>
-            {
-                new LinkDto($"/api/motos/{created.Id}", "self", "GET"),
-                new LinkDto($"/api/motos/{created.Id}", "update_moto", "PUT"),
-                new LinkDto($"/api/motos/{created.Id}", "delete_moto", "DELETE")
-            };
             return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
         }
 

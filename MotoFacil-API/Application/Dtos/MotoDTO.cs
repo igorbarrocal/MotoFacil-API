@@ -15,8 +15,5 @@ namespace MotoFacilAPI.Application.Dtos
         public string Marca { get; set; } = string.Empty;
         /// <example>42</example>
         public int UsuarioId { get; set; }
-
-        // HATEOAS
-        public List<LinkDto>? Links { get; set; }
     }
 }

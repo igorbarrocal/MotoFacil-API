@@ -15,8 +15,5 @@
         public int UsuarioId { get; set; }
         /// <example>8</example>
         public int MotoId { get; set; }
-
-        // HATEOAS
-        public List<LinkDto>? Links { get; set; }
     }
 }

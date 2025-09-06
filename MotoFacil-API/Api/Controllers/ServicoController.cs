@@ -22,17 +22,6 @@ namespace MotoFacilAPI.Api.Controllers
         {
             var all = await _service.ListAsync();
             var paged = all.Skip((page - 1) * pageSize).Take(pageSize).ToList();
-
-            // HATEOAS
-            foreach (var servico in paged)
-            {
-                servico.Links = new List<LinkDto>
-                {
-                    new LinkDto($"/api/servicos/{servico.Id}", "self", "GET"),
-                    new LinkDto($"/api/servicos/{servico.Id}", "update_servico", "PUT"),
-                    new LinkDto($"/api/servicos/{servico.Id}", "delete_servico", "DELETE")
-                };
-            }
             return Ok(paged);
         }
 
@@ -46,12 +35,6 @@ namespace MotoFacilAPI.Api.Controllers
         {
             var result = await _service.GetByIdAsync(id);
             if (result is null) return NotFound();
-            result.Links = new List<LinkDto>
-            {
-                new LinkDto($"/api/servicos/{id}", "self", "GET"),
-                new LinkDto($"/api/servicos/{id}", "update_servico", "PUT"),
-                new LinkDto($"/api/servicos/{id}", "delete_servico", "DELETE")
-            };
             return Ok(result);
         }
 
@@ -63,12 +46,6 @@ namespace MotoFacilAPI.Api.Controllers
         public async Task<ActionResult<ServicoDto>> Post([FromBody] ServicoDto dto)
         {
             var created = await _service.CreateAsync(dto);
-            created.Links = new List<LinkDto>
-            {
-                new LinkDto($"/api/servicos/{created.Id}", "self", "GET"),
-                new LinkDto($"/api/servicos/{created.Id}", "update_servico", "PUT"),
-                new LinkDto($"/api/servicos/{created.Id}", "delete_servico", "DELETE")
-            };
             return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
         }
 
