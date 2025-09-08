@@ -9,10 +9,10 @@ namespace MotoFacilAPI.Application.Dtos
     {
         /// <example>1</example>
         public int Id { get; set; }
+        /// <example>ABC1D23</example>
+        public string Placa { get; set; } = string.Empty;
         /// <example>MottuSport</example>
         public ModeloMoto Modelo { get; set; }
-        /// <example>Honda</example>
-        public string Marca { get; set; } = string.Empty;
         /// <example>42</example>
         public int UsuarioId { get; set; }
     }

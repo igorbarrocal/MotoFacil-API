@@ -11,11 +11,8 @@ namespace MotoFacilAPI.Api.Controllers
         private readonly IMotoService _service;
         public MotosController(IMotoService service) => _service = service;
 
-        /// <summary>
-        /// Lista todas as motos (com paginação)
-        /// </summary>
-        /// <param name="page">Página</param>
-        /// <param name="pageSize">Itens por página</param>
+        
+    
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<MotoDto>), 200)]
         public async Task<ActionResult<IEnumerable<MotoDto>>> Get([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
@@ -25,9 +22,9 @@ namespace MotoFacilAPI.Api.Controllers
             return Ok(paged);
         }
 
-        /// <summary>
+        
         /// Busca moto por ID
-        /// </summary>
+        
         [HttpGet("{id:int}")]
         [ProducesResponseType(typeof(MotoDto), 200)]
         [ProducesResponseType(404)]

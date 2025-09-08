@@ -9,18 +9,18 @@ using Oracle.EntityFrameworkCore.Metadata;
 
 #nullable disable
 
-namespace MotoFacil_API.Migrations
+namespace MotoFacilAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250905234949_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20250908160949_MotoFacilInitial")]
+    partial class MotoFacilInitial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.8")
+                .HasAnnotation("ProductVersion", "8.0.13")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             OracleModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -33,12 +33,12 @@ namespace MotoFacil_API.Migrations
 
                     OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Marca")
-                        .IsRequired()
-                        .HasColumnType("NVARCHAR2(2000)");
-
                     b.Property<int>("Modelo")
                         .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("Placa")
+                        .IsRequired()
+                        .HasColumnType("NVARCHAR2(2000)");
 
                     b.Property<int>("UsuarioId")
                         .HasColumnType("NUMBER(10)");
@@ -68,12 +68,17 @@ namespace MotoFacil_API.Migrations
                     b.Property<int>("MotoId")
                         .HasColumnType("NUMBER(10)");
 
+                    b.Property<int?>("MotoId1")
+                        .HasColumnType("NUMBER(10)");
+
                     b.Property<int>("UsuarioId")
                         .HasColumnType("NUMBER(10)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("MotoId");
+
+                    b.HasIndex("MotoId1");
 
                     b.HasIndex("UsuarioId");
 
@@ -109,15 +114,19 @@ namespace MotoFacil_API.Migrations
             modelBuilder.Entity("MotoFacilAPI.Domain.Entities.Servico", b =>
                 {
                     b.HasOne("MotoFacilAPI.Domain.Entities.Moto", "Moto")
-                        .WithMany("Servicos")
+                        .WithMany()
                         .HasForeignKey("MotoId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("MotoFacilAPI.Domain.Entities.Moto", null)
+                        .WithMany("Servicos")
+                        .HasForeignKey("MotoId1");
 
                     b.HasOne("MotoFacilAPI.Domain.Entities.Usuario", "Usuario")
                         .WithMany()
                         .HasForeignKey("UsuarioId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Moto");
