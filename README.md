@@ -98,7 +98,7 @@ Por padrão, está configurado para Oracle:
 
 ```json
 "ConnectionStrings": {
-  "Oracle": "Data Source=oracle.fiap.com.br:1521/orcl;User ID=RM558238;Password=111105;"
+  "Oracle": "Data Source=oracle.fiap.com.br:1521/orcl;User ID=RMxxxxxx;Password=xxxxxx;"
 }
 ```
 Altere conforme seu ambiente.
