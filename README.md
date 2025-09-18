@@ -26,20 +26,21 @@ A arquitetura segue os princípios de **Clean Architecture**, **Domain-Driven De
 - 🏍️ **Gerenciamento de Motos** (CRUD completo, incluindo vínculo com usuário, enum para modelo da moto)
 - 🔧 **Gerenciamento de Serviços** realizados nas motos (CRUD completo, regras de reagendamento)
 - 📦 **Validação de dados** via DTOs e entidades
-- 📑 **Documentação interativa** com Swagger/OpenAPI
+- 📑 **Documentação interativa** com Swagger/OpenAPI (descrição de endpoints, parâmetros e exemplos)
 - 🗄️ **Persistência de dados** com Entity Framework Core + Migrations
-- 🧩 **Paginação** nos endpoints de listagem
-- 🔗 **HATEOAS** (padrão de boas práticas, retornos claros e status code apropriados)
+- 🧩 **Paginação** nos endpoints de listagem (parâmetros `page`, `pageSize`, retorno `totalCount`)
+- 🔗 **HATEOAS** (links de navegação nos retornos das entidades)
+- 🔒 **Boas práticas REST**: status code adequado, payloads claros, uso correto dos verbos HTTP
 
 ---
 
 ## 📂 Estrutura do Projeto  
 src/
 
-┣ 📂 Api -> Controllers REST, validações de entrada  
-┣ 📂 Application -> Serviços de aplicação, DTOs  
-┣ 📂 Domain -> Entidades, enums, Value Objects, Interfaces de Repositório  
-┗ 📂 Infrastructure -> Persistência de dados, repositórios  
+┣ 📂 Api — Controllers REST, validações de entrada  
+┣ 📂 Application — Serviços de aplicação, DTOs  
+┣ 📂 Domain — Entidades, enums, Value Objects, Interfaces de Repositório  
+┗ 📂 Infrastructure — Persistência de dados, repositórios  
 
 ---
 
@@ -58,8 +59,8 @@ src/
 ### 👥 Usuários  
 | Método | Endpoint        | Descrição            |  
 |--------|----------------|----------------------|  
-| GET    | `/usuarios`    | Listar todos os usuários (com paginação) |  
-| GET    | `/usuarios/{id}` | Buscar usuário por ID |  
+| GET    | `/usuarios`    | Listar todos os usuários (com paginação e HATEOAS) |  
+| GET    | `/usuarios/{id}` | Buscar usuário por ID (com HATEOAS) |  
 | POST   | `/usuarios`    | Criar novo usuário |  
 | PUT    | `/usuarios/{id}` | Atualizar usuário |  
 | DELETE | `/usuarios/{id}` | Remover usuário |  
@@ -67,20 +68,27 @@ src/
 ### 🏍️ Motos  
 | Método | Endpoint     | Descrição           |  
 |--------|-------------|---------------------|  
-| GET    | `/motos`    | Listar todas as motos (com paginação) |  
-| GET    | `/motos/{id}` | Buscar moto por ID |  
-| POST   | `/motos`    | Criar nova moto (modelo, marca, vínculo ao usuário) |  
+| GET    | `/motos`    | Listar todas as motos (com paginação e HATEOAS) |  
+| GET    | `/motos/{id}` | Buscar moto por ID (com HATEOAS) |  
+| POST   | `/motos`    | Criar nova moto (modelo, vínculo ao usuário) |  
 | PUT    | `/motos/{id}` | Atualizar moto |  
 | DELETE | `/motos/{id}` | Remover moto |  
 
 ### 🔧 Serviços  
 | Método | Endpoint        | Descrição            |  
 |--------|----------------|----------------------|  
-| GET    | `/servicos`    | Listar todos os serviços (com paginação) |  
-| GET    | `/servicos/{id}` | Buscar serviço por ID |  
+| GET    | `/servicos`    | Listar todos os serviços (com paginação e HATEOAS) |  
+| GET    | `/servicos/{id}` | Buscar serviço por ID (com HATEOAS) |  
 | POST   | `/servicos`    | Criar novo serviço (vinculado a uma moto e usuário) |  
 | PUT    | `/servicos/{id}` | Atualizar serviço (reagendar data, etc.) |  
 | DELETE | `/servicos/{id}` | Remover serviço |  
+
+---
+
+## 📝 Modelos dos Dados (Swagger/OpenAPI)  
+
+Todos os endpoints têm modelos de dados detalhados, exemplos de payloads de requisição e resposta, e parâmetros descritos no Swagger.  
+- Acesse [https://localhost:7150/swagger](https://localhost:7150/swagger) após rodar a API.
 
 ---
 
@@ -88,8 +96,8 @@ src/
 
 ### 1️⃣ Clone o repositório  
 ```bash
-git clone https://github.com/igorbarrocal/MotoFacilAPI.git
-cd MotoFacilAPI
+git clone https://github.com/igorbarrocal/MotoFacil-API.git
+cd MotoFacil-API
 ```
 
 ### 2️⃣ Configure o banco de dados  
@@ -120,21 +128,34 @@ https://localhost:7150/swagger
 
 ---
 
-## 📝 Modelos dos Dados (Swagger/OpenAPI)  
-
-Os modelos e exemplos de payloads estão disponíveis na documentação interativa Swagger da API.  
-Todos os endpoints têm descrições de parâmetros, exemplos e resposta.
-
----
-
 ## 🏆 Critérios de Projeto Atendidos
 
-- **DDD**: Mínimo 3 entidades (Usuário, Moto, Serviço), uma entidade raiz (Usuário), Value Object (Email), entidades ricas com comportamento.
-- **Clean Architecture & Clean Code**: Separação clara das camadas, SRP, DRY, KISS, YAGNI, nomeação clara, código limpo.
-- **REST**: Endpoints CRUD, boas práticas, status codes, paginação, documentação.
-- **Persistência**: Entity Framework Core, migrations aplicáveis, conexão via appsettings.
+- **DDD e Clean Architecture:**  
+  - 3 entidades principais (Usuário, Moto, Serviço)
+  - Entidades ricas (comportamento encapsulado)
+  - Agregado raiz (Usuário)
+  - Value Object (`Email`)
+  - Interface de repositório definida no domínio
+  - Separação clara entre entidade e VO
+- **RESTful:**  
+  - Endpoints CRUD para as 3 entidades  
+  - Paginação nas listagens  
+  - HATEOAS nos retornos  
+  - Status code adequado  
+- **Swagger/OpenAPI:**  
+  - Descrição dos endpoints e parâmetros  
+  - Exemplos de payloads  
+  - Modelos de dados descritos  
+- **Clean Code:**  
+  - SRP, DRY, KISS, YAGNI  
+  - Nomeação clara  
+  - Métodos pequenos e legíveis  
+  - Separação de responsabilidades  
+  - Código limpo e sem trechos comentados desnecessários  
+- **Persistência + Migrations:**  
+  - Entity Framework Core  
+  - Migrations criadas e aplicáveis  
+  - Conexão via appsettings  
+  - Instruções no README para executar localmente  
 
 ---
-
-## 📬 Dúvidas?  
-Abra uma issue no repositório!
