@@ -1,19 +1,21 @@
-﻿using MotoFacilAPI.Domain.Enums;
+﻿using System.ComponentModel.DataAnnotations;
+using MotoFacilAPI.Domain.Enums;
 
 namespace MotoFacilAPI.Application.Dtos
 {
-    /// <summary>
-    /// DTO para Moto (Swagger: exemplos e descrição)
-    /// </summary>
     public class MotoDto
     {
-        /// <example>1</example>
         public int Id { get; set; }
-        /// <example>ABC1D23</example>
+
+        [Required]
         public string Placa { get; set; } = string.Empty;
-        /// <example>MottuSport</example>
+
+        [Required]
         public ModeloMoto Modelo { get; set; }
-        /// <example>42</example>
+
+        [Required]
         public int UsuarioId { get; set; }
+
+        public List<LinkDto> Links { get; set; } = new();
     }
 }

@@ -1,15 +1,17 @@
-﻿namespace MotoFacilAPI.Application.Dtos
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace MotoFacilAPI.Application.Dtos
 {
-    /// <summary>
-    /// DTO para Usuário (Swagger: exemplos e descrição)
-    /// </summary>
     public class UsuarioDto
     {
-        /// <example>1</example>
         public int Id { get; set; }
-        /// <example>Igor Barrocal</example>
+
+        [Required]
         public string Nome { get; set; } = string.Empty;
-        /// <example>igor@email.com</example>
+
+        [Required, EmailAddress]
         public string Email { get; set; } = string.Empty;
+
+        public List<LinkDto> Links { get; set; } = new();
     }
 }

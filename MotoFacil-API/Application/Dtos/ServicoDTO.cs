@@ -1,19 +1,23 @@
-﻿namespace MotoFacilAPI.Application.Dtos
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace MotoFacilAPI.Application.Dtos
 {
-    /// <summary>
-    /// DTO para Serviço (Swagger: exemplos e descrição)
-    /// </summary>
     public class ServicoDto
     {
-        /// <example>1</example>
         public int Id { get; set; }
-        /// <example>Troca de óleo</example>
-        public string Descricao { get; set; }
-        /// <example>2025-09-05T10:30:00Z</example>
+
+        [Required]
+        public string Descricao { get; set; } = string.Empty;
+
+        [Required]
         public DateTime Data { get; set; }
-        /// <example>3</example>
+
+        [Required]
         public int UsuarioId { get; set; }
-        /// <example>8</example>
+
+        [Required]
         public int MotoId { get; set; }
+
+        public List<LinkDto> Links { get; set; } = new();
     }
 }
