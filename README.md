@@ -23,7 +23,7 @@ A arquitetura segue os princípios de **Clean Architecture**, **Domain-Driven De
 ## ⚙️ Funcionalidades  
 
 - 👥 **Gerenciamento de Usuários** (CRUD completo, entidade rica, Value Object para e-mail)
-- 🏍️ **Gerenciamento de Motos** (CRUD completo, incluindo vínculo com usuário, enum para modelo da moto)
+- 🏍️ **Gerenciamento de Motos** (CRUD completo, incluindo vínculo com usuário, enum para modelo da moto: `MottuSport`, `MottuE`, `MottuPop`)
 - 🔧 **Gerenciamento de Serviços** realizados nas motos (CRUD completo, regras de reagendamento)
 - 📦 **Validação de dados** via DTOs e entidades
 - 📑 **Documentação interativa** com Swagger/OpenAPI (descrição de endpoints, parâmetros e exemplos)
@@ -85,6 +85,45 @@ src/
 
 ---
 
+## 📝 Exemplos de Payloads  
+
+### Criar Usuário
+
+```json
+POST /usuarios
+{
+  "nome": "João Silva",
+  "email": "joao@email.com"
+}
+```
+
+### Criar Moto
+
+```json
+POST /motos
+{
+  "placa": "ABC1234",
+  "modelo": "MottuSport",
+  "usuarioId": 1
+}
+```
+
+> Modelos válidos: `"MottuSport"`, `"MottuE"`, `"MottuPop"`
+
+### Criar Serviço
+
+```json
+POST /servicos
+{
+  "descricao": "Troca de óleo",
+  "data": "2025-09-25T14:00:00Z",
+  "usuarioId": 1,
+  "motoId": 1
+}
+```
+
+---
+
 ## 📝 Modelos dos Dados (Swagger/OpenAPI)  
 
 Todos os endpoints têm modelos de dados detalhados, exemplos de payloads de requisição e resposta, e parâmetros descritos no Swagger.  
@@ -128,34 +167,10 @@ https://localhost:7150/swagger
 
 ---
 
-## 🏆 Critérios de Projeto Atendidos
+## 🧪 Testes
 
-- **DDD e Clean Architecture:**  
-  - 3 entidades principais (Usuário, Moto, Serviço)
-  - Entidades ricas (comportamento encapsulado)
-  - Agregado raiz (Usuário)
-  - Value Object (`Email`)
-  - Interface de repositório definida no domínio
-  - Separação clara entre entidade e VO
-- **RESTful:**  
-  - Endpoints CRUD para as 3 entidades  
-  - Paginação nas listagens  
-  - HATEOAS nos retornos  
-  - Status code adequado  
-- **Swagger/OpenAPI:**  
-  - Descrição dos endpoints e parâmetros  
-  - Exemplos de payloads  
-  - Modelos de dados descritos  
-- **Clean Code:**  
-  - SRP, DRY, KISS, YAGNI  
-  - Nomeação clara  
-  - Métodos pequenos e legíveis  
-  - Separação de responsabilidades  
-  - Código limpo e sem trechos comentados desnecessários  
-- **Persistência + Migrations:**  
-  - Entity Framework Core  
-  - Migrations criadas e aplicáveis  
-  - Conexão via appsettings  
-  - Instruções no README para executar localmente  
+Para rodar os testes (se houver):
+```bash
+dotnet test
+```
 
----
