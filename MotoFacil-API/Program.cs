@@ -5,14 +5,13 @@ using MotoFacilAPI.Domain.Repositories;
 using MotoFacilAPI.Infrastructure.Repositories;
 using MotoFacilAPI.Application.Interfaces;
 using MotoFacilAPI.Application.Services;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Conexão Oracle definida em appsettings.json
-
-    builder.Services.AddDbContext<ApplicationDbContext>(options =>
-        options.UseOracle(builder.Configuration.GetConnectionString("Oracle")));
-
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseOracle(builder.Configuration.GetConnectionString("Oracle")));
 
 // Repositórios (Domain/Infra)
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
@@ -50,7 +49,11 @@ builder.Services.AddSwaggerGen(c =>
         Version = "v1",
         Description = "API para gerenciamento de usuários, motos e serviços no sistema MotoFácil"
     });
-    // NÃO usa EnableAnnotations aqui
+
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    if (File.Exists(xmlPath))
+        c.IncludeXmlComments(xmlPath);
 });
 
 // Pipeline
@@ -61,7 +64,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.UseSwagger();
-app.UseSwaggerUI(); // Usa configuração padrão: acessa por /swagger
+app.UseSwaggerUI();
 
 app.MapControllers();
 

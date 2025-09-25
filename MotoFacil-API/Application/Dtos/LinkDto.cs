@@ -1,5 +1,8 @@
 ﻿namespace MotoFacilAPI.Application.Dtos
 {
+    /// <summary>
+    /// Link HATEOAS para navegação dos recursos
+    /// </summary>
     public class LinkDto
     {
         /// <example>self</example>

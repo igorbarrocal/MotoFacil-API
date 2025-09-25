@@ -11,6 +11,7 @@ namespace MotoFacilAPI.Application.Dtos
         public string Placa { get; set; } = string.Empty;
 
         [Required]
+        [EnumDataType(typeof(ModeloMoto), ErrorMessage = "Modelos válidos: MottuSport, MottuE, MottuPop")]
         public ModeloMoto Modelo { get; set; }
 
         [Required]
