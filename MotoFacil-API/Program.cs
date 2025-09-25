@@ -9,8 +9,17 @@ using MotoFacilAPI.Application.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 // Conexão Oracle definida em appsettings.json
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseOracle(builder.Configuration.GetConnectionString("Oracle")));
+var provider = builder.Configuration.GetValue<string>("DatabaseProvider") ?? "Oracle";
+if (provider == "Postgres")
+{
+    builder.Services.AddDbContext<ApplicationDbContext>(options =>
+        options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+}
+else
+{
+    builder.Services.AddDbContext<ApplicationDbContext>(options =>
+        options.UseOracle(builder.Configuration.GetConnectionString("Oracle")));
+}
 
 // Repositórios (Domain/Infra)
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
