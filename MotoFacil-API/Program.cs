@@ -39,6 +39,9 @@ builder.Services.AddCors(options =>
     });
 });
 
+// Health Checks
+builder.Services.AddHealthChecks();
+
 // Configuração Swagger/OpenAPI
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -67,5 +70,11 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 app.MapControllers();
+app.MapHealthChecks("/health").WithOpenApi(operation => new(operation)
+{
+    Summary = "Health Check",
+    Description = "Verifica o status de saúde da aplicação",
+    Tags = new List<Microsoft.OpenApi.Models.OpenApiTag> { new() { Name = "Health" } }
+});
 
 app.Run();

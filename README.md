@@ -83,6 +83,11 @@ src/
 | PUT    | `/servicos/{id}` | Atualizar serviço (reagendar data, etc.) |  
 | DELETE | `/servicos/{id}` | Remover serviço |  
 
+### 🏥 Health Check  
+| Método | Endpoint   | Descrição            |  
+|--------|-----------|----------------------|  
+| GET    | `/health` | Verifica o status de saúde da aplicação (retorna 200 OK quando funcionando) |  
+
 ---
 
 ## 📝 Exemplos de Payloads  
