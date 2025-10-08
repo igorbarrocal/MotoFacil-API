@@ -4,7 +4,7 @@
 **Disciplina:** *Advanced Business Development with .NET*  
 
 👤 **Autores**  
-- Igor Barrocal – RM555217  
+- Igor Barrocal – RM555217  a
 - Cauan da Cruz – RM558238  
 
 ---
